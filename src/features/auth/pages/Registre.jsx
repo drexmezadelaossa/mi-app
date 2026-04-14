@@ -10,11 +10,11 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../services/authService";
+import { sendEmail } from "../services/emailService";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  // Cambiado 'name' por 'nombre_usuario' para coincidir con tu authService y el Backend
   const [form, setForm] = useState({
     nombre_usuario: "",
     email: "",
@@ -37,15 +37,17 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Iniciamos el loading
+    setLoading(true);
 
     try {
-      // Usamos form.nombre_usuario que es lo que espera tu authService.register
       const res = await authService.register(
         form.nombre_usuario,
         form.email,
         form.password
       );
+
+      // 🔥 AQUÍ SE ENVÍA EL CORREO
+      await sendEmail(e.target);
 
       setStatus({
         type: "success",
@@ -54,13 +56,12 @@ const Register = () => {
 
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      // Si el error trae un mensaje del backend, lo mostramos, si no, mostramos el genérico
       setStatus({
         type: "error",
         msg: err.response?.data?.message || "Error al registrar usuario",
       });
     } finally {
-      setLoading(false); // Detenemos el loading
+      setLoading(false);
     }
   };
 
@@ -98,7 +99,6 @@ const Register = () => {
         )}
 
         <form onSubmit={handleSubmit}>
-          {/* Se agregó el name correcto, el onChange y fullWidth */}
           <TextField
             label="Nombre"
             name="nombre_usuario"

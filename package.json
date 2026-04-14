@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.2.10",
@@ -16,7 +17,6 @@
     "@mui/material": "^7.3.9",
     "axios": "^1.15.0",
     "bootstrap": "^5.3.8",
-    "emailjs-com": "^3.2.0",
     "firebase": "^12.11.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
