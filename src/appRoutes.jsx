@@ -11,7 +11,7 @@ const Login = lazy(() => import("./features/auth/pages/Login"));
 const Recover = lazy(() => import("./features/auth/pages/Recover"));
 const Register = lazy(() => import("./features/auth/pages/Registre"));
 const Dashboard = lazy(() => import("./features/auth/pages/Dashboard"));
-const Apis = lazy(() => import("./features/layout/apis"));
+const Apis = lazy(() => import("./features/layout/Apis"));
 
 /**
  * 🔐 PROTECTED ROUTE
