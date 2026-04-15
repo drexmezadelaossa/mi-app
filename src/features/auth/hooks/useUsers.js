@@ -1,37 +1,42 @@
-import { useState, useEffect, useCallback } from "react";
-import { userService } from "../services/userService";
+import axios from "axios";
 
-export const useUsers = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+// ✅ URL de producción para la gestión de usuarios (CRUD)
+const API_URL = "https://backend-usuarios-8mto.onrender.com/api/usuarios";
 
-  const fetchUsers = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await userService.getAll();
-      const fetchedUsers = data.usuarios || data; 
-      setUsers(Array.isArray(fetchedUsers) ? fetchedUsers : []);
-      setLoading(false);
-    } catch (err) {
-      console.error("Error al obtener usuarios:", err);
-      setLoading(false);
-    }
-  }, []);
+export const userService = {
+  // Obtener todos los usuarios (El que arregla el error de la tabla)
+  getAll: async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(API_URL, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
 
-  const removeUser = async (id) => {
-    if (!window.confirm("¿Estás seguro de que quieres eliminar este usuario?")) return;
-    try {
-      await userService.delete(id);
-      setUsers((prev) => prev.filter((user) => user._id !== id));
-      alert("Usuario eliminado con éxito");
-    } catch (err) {
-      alert("Error al eliminar: " + (err.response?.data?.msg || "Sin autorización"));
-    }
-  };
+  // Registrar/Crear usuario desde el Dashboard
+  register: async (userData) => {
+    const token = localStorage.getItem("token");
+    const res = await axios.post(API_URL, userData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
 
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+  // Actualizar usuario
+  update: async (id, userData) => {
+    const token = localStorage.getItem("token");
+    const res = await axios.put(`${API_URL}/${id}`, userData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
 
-  return { users, loading, removeUser, fetchUsers };
+  // Eliminar usuario
+  delete: async (id) => {
+    const token = localStorage.getItem("token");
+    const res = await axios.delete(`${API_URL}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  }
 };
