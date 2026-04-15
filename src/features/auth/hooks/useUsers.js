@@ -4,13 +4,15 @@ import axios from "axios";
 const API_URL = "https://backend-usuarios-8mto.onrender.com/api/usuarios";
 
 export const userService = {
-  // Obtener todos los usuarios (El que arregla el error de la tabla)
+  // Obtener todos los usuarios
   getAll: async () => {
     const token = localStorage.getItem("token");
     const res = await axios.get(API_URL, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    return res.data;
+    // ✅ Agregamos esta pequeña validación para que la tabla vea los datos de MongoDB
+    // Si res.data tiene una propiedad 'usuarios', la devuelve, si no, devuelve res.data directamente.
+    return res.data.usuarios || res.data;
   },
 
   // Registrar/Crear usuario desde el Dashboard
