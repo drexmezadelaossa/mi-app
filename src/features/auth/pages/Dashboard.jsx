@@ -22,17 +22,15 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        // Lógica de edición: se envía el ID y el formData (el backend debe procesar 'password' como opcional)
         await userService.update(editingId, formData);
         alert("Usuario actualizado con éxito");
       } else {
-        // Lógica de creación: se envía el formData con los campos requeridos
         await userService.register(formData);
         alert("Usuario creado con éxito");
       }
 
       closeForm();
-      fetchUsers(); // Refresca la tabla automáticamente
+      fetchUsers(); 
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.msg || "Error al procesar la solicitud");
@@ -45,7 +43,7 @@ const Dashboard = () => {
     setFormData({
       nombre_usuario: user.nombre_usuario,
       email: user.email,
-      password: "", // Se deja vacío por seguridad; si el usuario no escribe nada, no se cambia en el backend
+      password: "", 
     });
     setShowForm(true);
   };
@@ -56,6 +54,7 @@ const Dashboard = () => {
     setFormData({ nombre_usuario: "", email: "", password: "" });
   };
 
+  // --- LÓGICA DE ELIMINACIÓN CORREGIDA PARA RENDER ---
   const handleDelete = async (id, nombre) => {
     const confirmar = window.confirm(
       `¿Estás seguro de que deseas eliminar permanentemente a ${nombre}?`,
@@ -63,7 +62,8 @@ const Dashboard = () => {
     if (!confirmar) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:3000/api/usuarios/${id}`, {
+      // ✅ Se cambió localhost:3000 por tu URL de Render
+      await axios.delete(`https://backend-usuarios-8mto.onrender.com/api/usuarios/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Usuario borrado de la base de datos");
@@ -237,6 +237,7 @@ const Dashboard = () => {
   );
 };
 
+// Se mantienen tus estilos exactamente igual
 const styles = {
   container: {
     padding: "20px",
